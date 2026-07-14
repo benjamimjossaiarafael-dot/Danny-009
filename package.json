@@ -1,0 +1,50 @@
+{
+  "name": "free-fire-api-server",
+  "version": "4.1.0",
+  "description": "API completa Free Fire Africa com Admin, Planos, Autenticação 2FA, Torneios, Passes e Proteção Anti-Spam",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --runInBand",
+    "build": "node --version"
+  },
+  "keywords": [
+    "free-fire",
+    "africa",
+    "api",
+    "ranking",
+    "tournaments",
+    "admin",
+    "authentication"
+  ],
+  "author": "Free Fire Africa",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "express-rate-limit": "^6.7.0",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "pdfkit": "^0.13.0",
+    "socket.io": "^4.5.4",
+    "sqlite3": "^5.1.6",
+    "speakeasy": "^2.0.0",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.4",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "nodemon": "^3.0.0",
+    "supertest": "^6.4.3"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
