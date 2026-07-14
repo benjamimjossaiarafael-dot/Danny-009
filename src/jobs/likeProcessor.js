@@ -1,9 +1,9 @@
 import { getDb } from '../database.js';
 import cron from 'node-cron';
-import { sendLike as remoteSendLike } from '../services/freeFireApi.js';
+import * as freeFireApi from '../services/freeFireApi.js';
 
 export function startLikeProcessor(io) {
-  // run every minute for demo; in production you might run every 5m or hourly
+  // run every minute for demo; in production you might run every 1-5 minutes depending on rate limits
   cron.schedule('* * * * *', async () => {
     try {
       const db = await getDb();
@@ -11,10 +11,11 @@ export function startLikeProcessor(io) {
       for (const like of queued) {
         try {
           // attempt remote send
-          const res = await remoteSendLike(like.to_player_game_id, like.server_region);
+          const res = await freeFireApi.sendLike(like.to_player_game_id, like.server_region);
           const sent_at = new Date().toISOString();
+          const status = res.success ? 'sent' : 'failed';
           await db.run('UPDATE likes SET status = ?, sent_at = ?, remote_response = ? WHERE id = ?', [
-            res.success ? 'sent' : 'failed',
+            status,
             sent_at,
             JSON.stringify(res),
             like.id,
@@ -26,9 +27,9 @@ export function startLikeProcessor(io) {
             if (recipient) {
               await db.run('UPDATE players SET likes_received_count = COALESCE(likes_received_count,0) + 1 WHERE id = ?', [recipient.id]);
             }
-            io.emit('like:sent', { likeId: like.id, to: like.to_player_game_id });
+            io.emit('like:sent', { likeId: like.id, to: like.to_player_game_id, simulated: !!res.simulated });
           } else {
-            io.emit('like:error', { likeId: like.id, error: res });
+            io.emit('like:error', { likeId: like.id, error: res.error || res.data || 'unknown' });
           }
         } catch (err) {
           console.error('Processing like failed', err);
