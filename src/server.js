@@ -11,6 +11,8 @@ import routesTournaments from './routes/tournaments.js';
 import routesAdmin from './routes/admin.js';
 import route2fa from './routes/2fa.js';
 import adminStats from './routes/adminStats.js';
+import rankings from './routes/rankings.js';
+import prizes from './routes/prizes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initWebsocket } from './websocket.js';
 import { globalLimiter } from './middleware/rateLimit.js';
@@ -34,6 +36,8 @@ app.use('/api/tournaments', routesTournaments);
 app.use('/api/admin', routesAdmin);
 app.use('/api/admin', adminStats);
 app.use('/api/2fa', route2fa);
+app.use('/api/rankings', rankings);
+app.use('/api/prizes', prizes);
 
 app.get('/', (req, res) => res.json({ ok: true, service: 'Free Fire Africa API' }));
 
